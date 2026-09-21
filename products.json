@@ -1,0 +1,36 @@
+{
+  "_readme": [
+    "Studio Canvas 제품 데이터 — 다운로드 전용 페이지의 유일한 출처.",
+    "이 파일을 고친 뒤 'python tools/build-downloads.py' 를 돌리면",
+    "download/<slug>/<platform>/index.html 이 다시 만들어진다.",
+    "platform 키는 URL 이 되므로 windows / macos / linux 만 쓴다."
+  ],
+
+  "products": [
+    {
+      "name": "Aurora",
+      "slug": "aurora",
+      "tagline": "로컬 마크다운 메모와 내 컴퓨터 안의 AI",
+      "icon": "/assets/icon-64.png",
+      "productPage": "/aurora.html",
+      "version": "7.0.2",
+      "updatedAt": "2026-09-21",
+      "platforms": {
+        "windows": {
+          "label": "Windows",
+          "requirement": "Windows 10 이상",
+          "fileName": "Aurora-7.0.2-win.zip",
+          "fileSize": "128 MB",
+          "downloadUrl": "https://github.com/SehunPyo/Aurora_web_download/releases/download/v7.0.2/Aurora-7.0.2-win.zip"
+        },
+        "macos": {
+          "label": "macOS",
+          "requirement": "macOS 11 이상",
+          "fileName": "Aurora-7.0.2-mac.dmg.zip",
+          "fileSize": "149 MB",
+          "downloadUrl": "https://github.com/SehunPyo/Aurora_web_download/releases/download/v7.0.2/Aurora-7.0.2-mac.dmg.zip"
+        }
+      }
+    }
+  ]
+}

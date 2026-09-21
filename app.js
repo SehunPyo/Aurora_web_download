@@ -499,12 +499,15 @@
     if (os === 'mac' && win && mac && mac.parentNode) mac.parentNode.insertBefore(mac, win);
 
     if (top && primary) {
+      /* 이제 버튼은 파일이 아니라 다운로드 전용 페이지로 간다.
+         download 속성이 남아 있으면 그 페이지가 파일로 저장돼 버린다. */
       top.setAttribute('href', primary.getAttribute('href'));
-      top.setAttribute('download', '');
+      top.removeAttribute('download');
       if (topLabel) topLabel.textContent = os === 'mac' ? 'macOS용 받기' : 'Windows용 받기';
     }
 
-    /* 설치 파일이 아직 downloads/ 에 없으면 버튼만 멀쩡해 보이는 상태가 된다.
+    /* 버튼은 이제 설치 파일이 아니라 다운로드 전용 페이지(/download/...)로 간다.
+       그 페이지가 없으면 버튼만 멀쩡해 보이는 상태가 되므로 확인해서 알린다.
        두 곳(맨 위·맨 아래)의 버튼 묶음 모두에 안내를 붙인다. */
     function notice(text, danger) {
       document.querySelectorAll('.dl').forEach(function (group) {
@@ -520,12 +523,12 @@
 
     /* file:// 로 열면 존재 확인 자체가 불가능하다. 확인을 건너뛰되 침묵하지는 않는다. */
     if (!/^https?:$/.test(location.protocol)) {
-      notice('로컬 파일로 열어 본 상태입니다. 설치 파일을 downloads/ 폴더에 넣어야 버튼이 동작합니다.', false);
+      notice('로컬 파일로 열어 본 상태입니다. 다운로드 페이지는 배포된 주소에서 동작합니다.', false);
       return;
     }
 
-    /* 외부 호스트(GitHub Releases 등)에 올린 파일은 CORS 때문에 HEAD 확인이
-       항상 실패한다. 파일이 있어도 “없음” 으로 잡히므로 확인 대상에서 뺀다. */
+    /* 외부 호스트를 가리키는 버튼은 CORS 때문에 HEAD 확인이 항상 실패한다.
+       있어도 “없음” 으로 잡히므로 같은 도메인인 것만 확인한다. */
     var local = [];
     document.querySelectorAll('.dl-btn').forEach(function (btn) {
       try {
@@ -543,7 +546,7 @@
         .then(function () {
           pending -= 1;
           if (pending === 0 && missing) {
-            notice('설치 파일이 아직 downloads/ 폴더에 없습니다. 빌드한 설치 파일을 그 폴더에 넣으면 버튼이 동작합니다.', true);
+            notice('다운로드 페이지를 찾지 못했습니다. python tools/build-downloads.py 를 실행해 /download 페이지를 만들어 주세요.', true);
           }
         });
     });

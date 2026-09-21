@@ -1,667 +1,185 @@
 <!doctype html>
 <!--
-  방향 계약 (Aurora 배포 페이지)
+  Studio Canvas — 브랜드 사이트 (입구)
 
-  THESIS: 이 페이지는 랜딩 페이지가 아니라 Aurora 창 한 개다. 방문자는 제품 설명을
-    카드 세 장으로 읽는 대신, 제품의 실제 크롬(레일·사이드바·탭·메타바) 안에서
-    한 편의 메모로 읽는다. 중앙 정렬 히어로 + 3열 기능 카드 + 그라데이션을 거부한다.
-  OWN-WORLD: 앱의 18개 역할 토큰(themes.js 가 주입)만으로 칠한 평면. 1px 헤어라인,
-    4·6·8·12px 라운드, accent-bg + accent 한 쌍이 유일한 활성 표시, 떠 있는 것에만 그림자.
-    Pretendard/시스템 산세, 경로·수치는 Consolas. 코드블록만 모든 테마에서 어둡다.
-  STORY: 처음 보는 사람이 "메모는 내 폴더의 파일이고 AI는 내 컴퓨터에서 돈다"를
-    이해하고, 자기 OS용 설치 파일을 받는다.
-  FIRST VIEWPORT: 화면 전체가 Aurora 창. 왼쪽 48px 레일, 236px 사이드바(페이지 목차가
-    워크스페이스 트리로), 상단 탭 "Aurora 소개.md", 메타바 오른쪽 끝에 기본 동작 하나 —
-    내 OS 다운로드 버튼. 본문 첫 화면은 노트의 h1 + 리드 + Windows/macOS 버튼.
-  FORM: 자체 구조 후보 7개 중 3번("사이트가 곧 Aurora 창"), 연출은 앱 고유의 표면 전환
-    (레일 활성 전환 + 90/140/200/260ms 사다리). seed key fdd95fc7.
+  첫 화면 : 글자 모양으로 잘라낸 유체 시뮬레이션. 커서를 올리면 글자 안에서
+            물감이 번진다. (fluid-text.js — Originkit FluidText 를 바닐라로 옮김)
+  두 번째 : 스크롤에 맞춰 스튜디오의 슬로건이 한 단어씩 켜진다.
+  세 번째 : 제품 16칸. 나온 것은 목업이 들어가고, 나머지는 Coming Soon.
 
-  앱 타입 램프(최대 24px)를 벗어나는 크기는 히어로 h1·섹션 h2 뿐이다. 설득 표면이라
-  의도적으로 확장했고, 앱 UI 에는 적용하지 않는다.
+  제품 설명은 여기서 하지 않는다. Aurora 의 소개·기능·설치·FAQ 는
+  전부 aurora.html 안에 있다. 이 페이지는 그 앞에 서는 간판이다.
+
+  제품 이미지는 tools/ 의 스크립트가 만든다.
+    python tools/make-mockups.py
 -->
-<html lang="ko" data-theme="light">
+<html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Aurora — 로컬 마크다운 메모와 내 컴퓨터 안의 AI</title>
-<meta name="description" content="Aurora는 메모를 내 폴더에 실제 파일로 저장하고 AI는 내 컴퓨터의 Ollama로 실행하는 오프라인 데스크톱 메모 앱입니다. Windows·macOS 설치 파일을 내려받으세요.">
-<meta property="og:title" content="Aurora — 로컬 마크다운 메모와 내 컴퓨터 안의 AI">
-<meta property="og:description" content="계정도 서버도 클라우드 전송도 없는 오프라인 메모 앱. Windows·macOS 다운로드.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Studio Canvas</title>
+<meta name="description" content="Studio Canvas는 매일 쓰는 데스크톱 소프트웨어를 만드는 스튜디오입니다. 만든 것은 전부 무료로 공개하고, 데이터는 사용자의 컴퓨터 안에 둡니다.">
+<meta property="og:title" content="Studio Canvas">
+<meta property="og:description" content="매일 쓰는 데스크톱 소프트웨어. 전부 무료, 전부 로컬.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#fafafa">
+<meta name="theme-color" content="#08080a">
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32">
-<link rel="stylesheet" href="styles.css">
+
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9340425102772278"
+     crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="studio.css">
 </head>
 <body>
 
-<a class="skip-link" href="#intro">본문으로 건너뛰기</a>
+<a class="skip-link" href="#work">제품 목록으로 건너뛰기</a>
 
-<!-- 아이콘 스프라이트 (lucide 계열, 앱과 같은 어휘) -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <g id="i-file" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h5"/>
-      <path d="M8 13h8M8 17h6"/>
-    </g>
-    <g id="i-folder" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 20a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2 3h8a2 2 0 0 1 2 2v2"/><path d="M2 18l2.5-7h17L19 18a2 2 0 0 1-2 2H4z"/>
-    </g>
-    <g id="i-type" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
-    </g>
-    <g id="i-graph" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
-      <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>
-    </g>
-    <g id="i-bot" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/>
-      <path d="M8 16h.01M16 16h.01"/>
-    </g>
-    <g id="i-flow" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="15" width="6" height="6" rx="1"/>
-      <path d="M6 9v3a3 3 0 0 0 3 3h3a3 3 0 0 1 3 3"/>
-    </g>
-    <g id="i-sheet" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/>
-    </g>
-    <g id="i-palette" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 3a9 9 0 1 0 0 18c.9 0 1.5-.7 1.5-1.5 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.8.7-1.5 1.5-1.5H16a5 5 0 0 0 5-5c0-4.4-4-8-9-8z"/>
-      <circle cx="7.5" cy="10.5" r="1.1"/><circle cx="12" cy="7.5" r="1.1"/><circle cx="16.5" cy="10.5" r="1.1"/>
-    </g>
-    <g id="i-download" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/>
-    </g>
-    <g id="i-help" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="9"/><path d="M9.2 9.2a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><path d="M12 17h.01"/>
-    </g>
-    <g id="i-panel" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M16 9l-3 3 3 3"/>
-    </g>
-    <g id="i-monitor" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
-    </g>
-    <g id="i-command" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M15 6a3 3 0 1 1 3 3h-3zM9 6a3 3 0 1 0-3 3h3zM15 18a3 3 0 1 0 3-3h-3zM9 18a3 3 0 1 1-3-3h3z"/>
-      <rect x="9" y="9" width="6" height="6"/>
-    </g>
-    <g id="i-user" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>
-    </g>
-    <g id="i-key" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="7.5" cy="15.5" r="3.5"/><path d="M10 13l8-8 3 3-2 2-2-2-2 2 2 2-3 3-2-2"/>
-    </g>
-    <g id="i-send" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 3L3 10l7 3 3 7z"/>
-    </g>
-    <g id="i-bold" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M7 4h6a4 4 0 0 1 0 8H7zM7 12h7a4 4 0 0 1 0 8H7z"/>
-    </g>
-    <g id="i-italic" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M15 4h-6M14 20H8M14 4L10 20"/>
-    </g>
-    <g id="i-marker" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M9 14l-3 3 2 3h5l7-7-5-5-7 7z"/><path d="M4 21h6"/>
-    </g>
-    <g id="i-list" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M9 6h12M9 12h12M9 18h12M4 6h.01M4 12h.01M4 18h.01"/>
-    </g>
-    <g id="i-check" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12l3 3 5-6"/>
-    </g>
-    <g id="i-code" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M9 18l-6-6 6-6M15 6l6 6-6 6"/>
-    </g>
-    <g id="i-table" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/>
-    </g>
-    <g id="i-link" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>
-    </g>
-    <g id="i-image" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
-    </g>
-  </defs>
-</svg>
+<div class="prog" id="prog"></div>
 
-<div class="win">
-
-  <!-- ─── 아이콘 레일 ─── -->
-  <nav class="rail boot boot-1" aria-label="화면 이동">
-    <img class="rail-mark" src="assets/icon-64.png" alt="" width="26" height="26">
-    <button class="rail-btn" data-goto="intro" aria-current="true">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-file"/></svg><span class="tip" aria-hidden="true">Aurora 소개</span>
-      <span class="sr-only">Aurora 소개</span>
-    </button>
-    <button class="rail-btn" data-goto="local">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-folder"/></svg><span class="tip" aria-hidden="true">내 파일, 내 컴퓨터</span>
-      <span class="sr-only">내 파일, 내 컴퓨터</span>
-    </button>
-    <span class="rail-sep"></span>
-    <button class="rail-btn" data-goto="editor">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-type"/></svg><span class="tip" aria-hidden="true">에디터</span>
-      <span class="sr-only">에디터</span>
-    </button>
-    <button class="rail-btn" data-goto="graph">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-graph"/></svg><span class="tip" aria-hidden="true">그래프</span>
-      <span class="sr-only">그래프</span>
-    </button>
-    <button class="rail-btn" data-goto="sheet">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-sheet"/></svg><span class="tip" aria-hidden="true">시트 · 드로잉</span>
-      <span class="sr-only">시트 · 드로잉</span>
-    </button>
-    <span class="rail-sep"></span>
-    <button class="rail-btn" data-goto="chat">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-bot"/></svg><span class="tip" aria-hidden="true">AI 채팅</span>
-      <span class="sr-only">AI 채팅</span>
-    </button>
-    <button class="rail-btn" data-goto="flow">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-flow"/></svg><span class="tip" aria-hidden="true">플로우</span>
-      <span class="sr-only">플로우</span>
-    </button>
-    <span class="rail-spacer"></span>
-    <button class="rail-btn" data-goto="themes">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-palette"/></svg><span class="tip" aria-hidden="true">테마</span>
-      <span class="sr-only">테마</span>
-    </button>
-    <button class="rail-btn" data-goto="install">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-download"/></svg><span class="tip" aria-hidden="true">설치 안내</span>
-      <span class="sr-only">설치 안내</span>
-    </button>
-    <button class="rail-btn" data-goto="faq">
-      <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-help"/></svg><span class="tip" aria-hidden="true">자주 묻는 질문</span>
-      <span class="sr-only">자주 묻는 질문</span>
-    </button>
-  </nav>
-
-  <!-- ─── 사이드바 ─── -->
-  <nav class="side boot boot-2" id="side" aria-label="문서 목록">
-    <div class="side-head">
-      <span class="side-title">Aurora</span>
-      <span class="side-ver">v7.0.2</span>
-      <button class="side-collapse side-toggle" id="sideClose" aria-label="사이드바 닫기">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-panel"/></svg>
-      </button>
-    </div>
-    <div class="side-body">
-      <p class="side-label">즐겨찾기</p>
-      <button class="side-item" data-goto="intro"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-file"/></svg><span>Aurora 소개</span></button>
-      <button class="side-item" data-goto="install"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-download"/></svg><span>설치 안내</span></button>
-
-      <p class="side-label">기능 <span class="side-count">5</span></p>
-      <button class="side-item" data-goto="editor"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-type"/></svg><span>에디터</span></button>
-      <button class="side-item" data-goto="graph"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-graph"/></svg><span>그래프</span></button>
-      <button class="side-item" data-goto="chat"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-bot"/></svg><span>AI 채팅</span></button>
-      <button class="side-item" data-goto="flow"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-flow"/></svg><span>플로우</span></button>
-      <button class="side-item" data-goto="sheet"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-sheet"/></svg><span>시트 · 드로잉</span></button>
-
-      <p class="side-label">환경 <span class="side-count">3</span></p>
-      <button class="side-item" data-goto="local"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-folder"/></svg><span>내 파일, 내 컴퓨터</span></button>
-      <button class="side-item" data-goto="themes"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-palette"/></svg><span>테마 37종</span></button>
-      <button class="side-item" data-goto="faq"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-help"/></svg><span>자주 묻는 질문</span></button>
-    </div>
-  </nav>
-  <button class="scrim" id="scrim" hidden aria-label="사이드바 닫기"></button>
-
-  <!-- ─── 본문 열 ─── -->
-  <div class="main">
-
-    <div class="tabbar boot boot-3" aria-label="열린 문서">
-      <button class="tab" aria-current="true" data-tab="intro">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-file"/></svg><span>Aurora 소개.md</span>
-      </button>
-      <button class="tab" aria-current="false" data-tab="install">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-download"/></svg><span>설치 안내.md</span>
-      </button>
-    </div>
-
-    <div class="metabar boot boot-3">
-      <button class="icon-btn side-toggle" id="sideOpen" aria-label="사이드바 열기">
-        <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-panel"/></svg>
-      </button>
-      <span class="metabar-title" id="docTitle">Aurora 소개</span>
-      <span class="metabar-meta">수정 2026-09-20</span>
-      <span class="metabar-tags">
-        <span class="chip">#로컬우선</span>
-        <span class="chip">#오프라인</span>
-        <span class="chip">#Ollama</span>
-      </span>
-      <span class="metabar-actions">
-        <button class="btn btn-sm" id="themeBtn" aria-expanded="false" aria-controls="themePop">테마 미리보기</button>
-        <a class="btn btn-primary btn-sm" id="topDownload" href="#intro">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-download"/></svg><span id="topDownloadLabel">다운로드</span>
-        </a>
-      </span>
-    </div>
-
-    <div class="pop" id="themePop" hidden>
-      <p class="pop-label">테마 <span id="themeCount"></span>종</p>
-      <div id="themeList"></div>
-    </div>
-
-    <main class="pane" id="pane">
-      <article class="note boot boot-4">
-
-        <!-- ══ 소개 ══ -->
-        <section class="sec hero" id="intro">
-          <h1>메모는 내 폴더에,<br>AI는 <span class="mark">내 컴퓨터 안에</span>.</h1>
-          <p class="lead">
-            Aurora는 마크다운 메모·드로잉·시트·링크 그래프에 로컬 AI 자동화를 더한 오프라인 데스크톱 앱입니다.
-            계정도 서버도 없고, 메모가 밖으로 나가지 않습니다. 글은 직접 고른 폴더에 실제 파일로 저장되고,
-            AI는 내 컴퓨터에서 도는 Ollama 모델이 처리합니다.
-          </p>
-
-          <div class="dl" id="dlButtons">
-            <a class="dl-btn" id="dlWin" href="https://github.com/SehunPyo/Aurora_web_download/releases/download/v7.0.2/Aurora-7.0.2-win.zip" download>
-              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-monitor"/></svg>
-              <span><b>Windows용 다운로드</b><small>Aurora-7.0.2-win.zip</small></span>
-            </a>
-            <a class="dl-btn" id="dlMac" href="https://github.com/SehunPyo/Aurora_web_download/releases/download/v7.0.2/Aurora-7.0.2-mac.dmg.zip" download>
-              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-command"/></svg>
-              <span><b>macOS용 다운로드</b><small>Aurora-7.0.2-mac.dmg.zip</small></span>
-            </a>
-          </div>
-          <p class="dl-note">
-            <span>Windows 10 이상 · macOS 11 이상</span>
-            <span class="mono">v7.0.2</span>
-            <span>내려받은 뒤 압축을 풀어 설치합니다</span>
-          </p>
-
-          <hr class="hr">
-
-          <ul class="list">
-            <li><b>메모는 파일이다.</b> 고른 폴더에 마크다운·드로잉·시트가 그대로 쌓입니다. 앱을 지워도 글은 남습니다.</li>
-            <li><b>AI는 내 컴퓨터에서 돈다.</b> 로컬 Ollama 모델로 요약·번역·태깅·정리를 합니다. 외부 API를 부르지 않습니다.</li>
-            <li><b>반복은 플로우가 한다.</b> 트리거 → AI 처리 → 파일 작업을 노드로 잇고, 원할 때 예약해 둡니다.</li>
-            <li><b>연결이 보인다.</b> 위키링크·태그 관계를 2D/3D 그래프로 확인합니다.</li>
-          </ul>
-        </section>
-
-        <!-- ══ 내 파일 ══ -->
-        <section class="sec" id="local">
-          <div class="sec-head">
-            <h2>내 파일, 내 컴퓨터</h2>
-          </div>
-          <p>
-            Aurora는 시작할 때 저장 폴더를 한 번 묻고, 그 뒤로는 그 폴더 안에서만 움직입니다.
-            메모 하나는 데이터베이스 행이 아니라 <b>.md 파일 한 개</b>입니다. 탐색기에서 열어도,
-            다른 편집기로 열어도, 10년 뒤에 열어도 같은 글입니다.
-          </p>
-          <p class="path">
-            <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-folder"/></svg>
-            C:\Users\me\Documents\Aurora\회의록\2026-09-18 스프린트 회고.md
-          </p>
-
-          <div class="demo">
-            <div class="demo-bar">
-              <span class="dot"></span>
-              <span>2026-09-18 스프린트 회고.md</span>
-              <span class="grow"></span>
-              <span class="raw-toggle" role="group" aria-label="보기 전환">
-                <button type="button" id="viewRendered" aria-pressed="true">메모 화면</button>
-                <button type="button" id="viewRaw" aria-pressed="false">실제 파일</button>
-              </span>
-            </div>
-            <div class="demo-body" id="renderedView">
-              <div class="doc">
-                <h4>2026-09-18 스프린트 회고</h4>
-                <p>이번 스프린트에서 <b>동기화 큐</b>를 걷어내고 저장 경로를 단일화했다.
-                  <span class="hl">다음 주는 그래프 성능</span>을 본다.</p>
-                <div class="todo done"><i></i><span>저장 경로 마이그레이션 검증</span></div>
-                <div class="todo"><i></i><span>3D 그래프 노드 500개 프로파일링</span></div>
-                <p>관련 메모 <span class="wiki">[[그래프 성능 측정]]</span></p>
-              </div>
-            </div>
-            <pre class="raw" id="rawView" hidden><span class="t">## 2026-09-18 스프린트 회고</span>
-
-이번 스프린트에서 **동기화 큐**를 걷어내고 저장 경로를 단일화했다.
-==다음 주는 그래프 성능==을 본다.
-
-<span class="t">- [x]</span> 저장 경로 마이그레이션 검증
-<span class="t">- [ ]</span> 3D 그래프 노드 500개 프로파일링
-
-관련 메모 <span class="t">[[그래프 성능 측정]]</span></pre>
-          </div>
-          <p class="demo-cap">
-            이 페이지의 모든 화면은 실제 Aurora UI를 HTML로 다시 그린 것이고, 메모 내용은 설명용 예시입니다.
-            색은 앱이 쓰는 18개 테마 토큰을 그대로 가져왔습니다 — 오른쪽 위 팔레트 버튼으로 바꿔 보세요.
-          </p>
-        </section>
-
-        <!-- ══ 에디터 ══ -->
-        <section class="sec" id="editor">
-          <div class="sec-head">
-            <h2>쓰는 자리</h2>
-          </div>
-          <p>
-            제목·굵게·형광펜·표·체크리스트·코드블록·이미지까지, 마크다운을 눈으로 보면서 씁니다.
-            탭으로 여러 문서를 열고, 문서를 본문으로 끌어 놓으면 좌우 분할 화면이 됩니다.
-            메모는 잠시 후 자동 저장되고, 창을 닫을 때 남은 변경도 저장합니다.
-          </p>
-
-          <div class="demo">
-            <div class="toolbar">
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-type"/></svg></span>
-              <span class="tb on"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-bold"/></svg></span>
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-italic"/></svg></span>
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-marker"/></svg></span>
-              <span class="div"></span>
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-list"/></svg></span>
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-check"/></svg></span>
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-table"/></svg></span>
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-image"/></svg></span>
-              <span class="div"></span>
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-code"/></svg></span>
-              <span class="tb"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-link"/></svg></span>
-            </div>
-            <div class="demo-body">
-              <div class="doc">
-                <h4>그래프 성능 측정</h4>
-                <p>노드 수를 늘려 가며 렌더링 프레임을 쟀다. <span class="hl">500개부터 3D가 떨어진다</span> —
-                  라벨을 접는 임계값을 <span class="wiki">[[2026-09-18 스프린트 회고]]</span>에 적어 둔 대로 조정한다.</p>
-                <table>
-                  <thead><tr><th>노드 수</th><th>2D</th><th>3D</th></tr></thead>
-                  <tbody>
-                    <tr><td>120</td><td>60fps</td><td>60fps</td></tr>
-                    <tr><td>500</td><td>58fps</td><td>41fps</td></tr>
-                  </tbody>
-                </table>
-                <p class="muted" style="margin:0 0 10px">측정값은 설명용 예시입니다.</p>
-                <div class="code">
-                  <div class="code-head"><span>javascript</span></div>
-<pre><span class="c">// 노드가 500개를 넘으면 라벨을 접는다</span>
-<span class="k">const</span> labels = nodes.<span class="f">filter</span>(<span class="a">n</span> =&gt; n.degree &gt; <span class="n">2</span>);</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-          <p class="muted">코드블록은 어느 테마에서나 어두운 면을 유지합니다 — 구문 색이 흔들리지 않아야 코드를 읽을 수 있기 때문입니다.</p>
-        </section>
-
-        <!-- ══ 그래프 ══ -->
-        <section class="sec" id="graph">
-          <div class="sec-head">
-            <h2>흩어진 메모 사이의 선</h2>
-          </div>
-          <p>
-            <span class="mono">[[위키링크]]</span>, 직접 연결, 태그가 만든 관계를 2D 또는 3D 그래프로 봅니다.
-            노드를 누르면 그 문서가 열리고, 무엇이 무엇과 붙어 있는지 한눈에 드러납니다.
-          </p>
-
-          <div class="demo">
-            <div class="demo-bar">
-              <span class="dot"></span><span>문서 그래프</span>
-              <span class="grow"></span>
-              <span class="seg" role="group" aria-label="표시 방식">
-                <button type="button" data-graph-mode="2d" aria-pressed="true">2D</button>
-                <button type="button" data-graph-mode="3d" aria-pressed="false">3D</button>
-              </span>
-            </div>
-            <div class="demo-body graph reveal" id="graphDemo">
-              <svg viewBox="0 0 700 300" role="img" aria-label="메모 여덟 개가 링크로 이어진 그래프. 가운데 제품 아이디어 메모가 가장 많은 연결을 가집니다.">
-                <g id="graphEdges" stroke-linecap="round"></g>
-                <g id="graphNodes"></g>
-              </svg>
-            </div>
-          </div>
-          <p class="muted scroll-hint">가로로 밀어서 전체를 볼 수 있습니다.</p>
-          <p class="muted">노드를 눌러 연결만 남겨 보세요. 앱에서는 같은 동작이 해당 문서를 엽니다.</p>
-        </section>
-
-        <!-- ══ AI 채팅 ══ -->
-        <section class="sec" id="chat">
-          <div class="sec-head">
-            <h2>내 메모를 아는 AI, 내 컴퓨터 안에서</h2>
-          </div>
-          <p>
-            채팅은 Ollama에 설치된 로컬 모델로 돌아갑니다. <b>지식베이스</b>는 AI가 읽을 범위,
-            <b>프로젝트</b>는 AI가 파일을 쓸 수 있는 범위로 따로 정합니다. 비밀번호로 잠근 메모는
-            읽기 범위에서 빠지고, 파일을 만들거나 덮어쓰는 작업은 승인을 거칩니다 —
-            프로젝트 폴더 안이라면 “이 폴더 항상 허용”을 골라 둘 수 있고, 폴더 밖 경로는 항상 허용할 수 없습니다.
-          </p>
-
-          <div class="demo">
-            <div class="demo-bar">
-              <span class="dot"></span><span>AI 채팅</span>
-              <span class="grow"></span>
-              <span class="chip chip-meta">llama3.1:8b</span>
-            </div>
-            <div class="chat reveal" id="chatDemo">
-              <div class="chat-scope">
-                <span class="chip">지식베이스 · 회의록/</span>
-                <span class="chip chip-meta">프로젝트 · 요약/</span>
-                <span class="chip chip-meta">잠긴 메모 제외</span>
-              </div>
-              <div class="msg me">
-                <span class="who"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-user"/></svg></span>
-                <span class="body">이번 달 회의록에서 아직 안 끝난 액션 아이템만 뽑아서 요약 메모로 만들어 줘.</span>
-              </div>
-              <div class="msg stream">
-                <span class="who"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-bot"/></svg></span>
-                <span class="body">
-                  회의록 폴더에서 9월 문서 <b>6개</b>를 읽었습니다. 미완료 항목은 4개이고, 담당이 비어 있는 항목이 1개 있습니다.
-                  요약 메모를 만들까요?
-                  <span class="approve">
-                    <span class="head"><svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-key"/></svg>파일 작업 승인</span>
-                    <span class="op">생성 · 요약/2026-09 미완료 액션.md</span>
-                    <span class="row">
-                      <span class="btn btn-sm btn-primary">이번만 허용</span>
-                      <span class="btn btn-sm">이 폴더 항상 허용</span>
-                      <span class="btn btn-sm">허용 안 함</span>
-                    </span>
-                  </span>
-                </span>
-              </div>
-              <div class="chat-input">메시지를 입력하세요 <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-send"/></svg></div>
-            </div>
-          </div>
-          <p class="muted">AI 답변은 틀릴 수 있습니다. 그래서 파일을 바꾸는 작업은 기본이 “승인 후 실행”입니다.</p>
-        </section>
-
-        <!-- ══ 플로우 ══ -->
-        <section class="sec" id="flow">
-          <div class="sec-head">
-            <h2>한 번 그려 두면 계속 도는 흐름</h2>
-          </div>
-          <p>
-            플로우는 왼쪽에서 오른쪽으로 이어진 노드 순서대로 대상을 가져오고, 처리하고, 저장합니다.
-            시작은 수동 실행·예약·파일 추가 감지·파일 수정 감지 중에서 고르고, 중간에는 AI 요약·번역·태그·OCR·문서 변환을,
-            끝에는 파일 생성·이동·알림을 놓습니다. 실행 전에 <b>예상 결과</b>로 대상 개수와 저장 위치를 먼저 확인합니다.
-          </p>
-
-          <div class="demo">
-            <div class="demo-bar">
-              <span class="dot"></span><span>회의록 자동 정리</span>
-              <span class="grow"></span>
-              <span class="chip chip-meta">예약 · 매일 08:00</span>
-            </div>
-            <div class="flow reveal" id="flowDemo">
-              <svg viewBox="0 0 700 230" role="img" aria-label="예약 실행에서 시작해 폴더, AI 요약, 태그 지정을 거쳐 파일 생성으로 끝나는 다섯 단계 플로우">
-                <g id="flowEdges"></g>
-                <g id="flowNodes"></g>
-              </svg>
-            </div>
-            <div class="demo-body" style="border-top:1px solid var(--border)">
-              <p class="muted" style="margin:0">
-                예상 결과 · 대상 <b>12개</b> · AI 작업 <b>12회</b> · 저장 위치 <span class="mono">요약/</span> · 저장 방식 <b>검토 후 저장</b>
-              </p>
-            </div>
-          </div>
-          <p class="muted scroll-hint">가로로 밀어서 전체를 볼 수 있습니다.</p>
-          <p class="muted">원본을 바꾸거나 지우는 노드 앞에는 필터와 검수를 두는 것을 권합니다. 예약 실행은 앱이 켜져 있거나 트레이에 상주할 때 돕니다.</p>
-        </section>
-
-        <!-- ══ 시트 · 드로잉 ══ -->
-        <section class="sec" id="sheet">
-          <div class="sec-head">
-            <h2>글로 안 되는 것들</h2>
-          </div>
-          <p>
-            표가 필요하면 시트를, 그림이 필요하면 드로잉을 같은 워크스페이스 안에 만듭니다.
-            둘 다 메모에서 <span class="mono">[[이름]]</span>으로 링크되고, 그래프에도 함께 나타납니다.
-          </p>
-
-          <div class="cols">
-            <div class="demo" style="margin:22px 0 0">
-              <div class="demo-bar"><span class="dot"></span><span>예산.sheet</span></div>
-              <div class="sheet-formula"><span class="fx">fx</span><span>=SUM(B2:B4)</span></div>
-              <div class="demo-body" style="padding:0">
-                <table class="sheet">
-                  <thead><tr><th></th><th>A</th><th>B</th></tr></thead>
-                  <tbody>
-                    <tr><th>1</th><td>항목</td><td>금액</td></tr>
-                    <tr><th>2</th><td>서버</td><td>0</td></tr>
-                    <tr><th>3</th><td>도구</td><td>48,000</td></tr>
-                    <tr><th>4</th><td>도서</td><td>32,000</td></tr>
-                    <tr><th>5</th><td>합계</td><td class="sel">80,000</td></tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="demo" style="margin:22px 0 0">
-              <div class="demo-bar"><span class="dot"></span><span>구조도.draw</span></div>
-              <div class="demo-body" style="padding:8px">
-                <svg viewBox="0 0 260 168" role="img" aria-label="메모 폴더에서 플로우를 거쳐 요약 폴더로 이어지는 손그림 도식">
-                  <g fill="none" stroke="var(--text-tertiary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 22 L104 20 L106 58 L20 60 Z"/>
-                    <path d="M150 22 L240 24 L238 60 L148 58 Z"/>
-                    <path d="M62 104 L160 102 L162 146 L64 148 Z"/>
-                    <path d="M106 40 C122 40 130 40 146 40"/>
-                    <path d="M140 36 L148 40 L140 45"/>
-                    <path d="M62 60 C62 82 78 96 100 102"/>
-                    <path d="M94 96 L101 103 L92 105"/>
-                    <path d="M194 60 C194 84 176 96 156 102"/>
-                  </g>
-                  <g font-size="11" fill="var(--text-secondary)" font-family="var(--app-font)">
-                    <text x="34" y="45">회의록/</text>
-                    <text x="168" y="46">노트/</text>
-                    <text x="86" y="130">요약/</text>
-                  </g>
-                </svg>
-              </div>
-            </div>
-          </div>
-          <p class="muted">시트는 수식·병합·조건부 서식을 지원하고 Excel 가져오기/내보내기가 됩니다. 드로잉은 Excalidraw 캔버스입니다.</p>
-        </section>
-
-        <!-- ══ 테마 ══ -->
-        <section class="sec" id="themes">
-          <div class="sec-head">
-            <h2>하루 종일 보는 화면이니까</h2>
-          </div>
-          <p>
-            테마 <b id="themesInlineCount">37</b>종이 들어 있습니다. 각 테마는 색 조합 팔레트 다섯 색에서
-            배경·글자·강조·형광펜까지 18개 값을 만들어 냅니다. 글꼴도 시스템 산세, Pretendard,
-            손글씨 계열 중에서 앱 전체에 한 번에 적용합니다.
-          </p>
-          <p class="muted">
-            아래 카드를 누르면 <b>이 페이지 전체</b>가 그 테마로 바뀝니다. 앱과 같은 코드로 색을 계산하므로,
-            여기서 보이는 색이 앱에서 보게 될 색입니다.
-          </p>
-          <div class="themes" id="themeGrid"></div>
-        </section>
-
-        <!-- ══ 설치 안내 ══ -->
-        <section class="sec" id="install">
-          <div class="sec-head">
-            <h2>설치하기</h2>
-          </div>
-
-          <h3><svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-2px;color:var(--text-tertiary)"><use href="#i-monitor"/></svg> Windows</h3>
-          <ul class="list">
-            <li><span class="mono">Aurora-7.0.2-win.zip</span>을 내려받아 압축을 풀고, 안에 있는 설치 파일(<span class="mono">.exe</span>)을 실행합니다.</li>
-            <li>“Windows의 PC 보호” 경고가 뜨면 <b>추가 정보 → 실행</b>을 누르세요. 코드 서명 인증서를 붙이지 않은 빌드라 나타나는 경고입니다.</li>
-            <li>설치 후 첫 실행에서 설정 → <b>기본 저장 경로</b>로 메모를 둘 폴더를 지정합니다.</li>
-          </ul>
-
-          <h3><svg aria-hidden="true" viewBox="0 0 24 24" width="15" height="15" style="vertical-align:-2px;color:var(--text-tertiary)"><use href="#i-command"/></svg> macOS</h3>
-          <ul class="list">
-            <li><span class="mono">Aurora-7.0.2-mac.dmg.zip</span>의 압축을 풀면 <span class="mono">.dmg</span> 파일이 나옵니다. 열어서 Aurora를 응용 프로그램 폴더로 끌어 놓습니다.</li>
-            <li>서명·공증을 하지 않은 빌드라 그냥 열면 “확인되지 않은 개발자” 경고가 납니다. Finder에서 Aurora를 <b>우클릭 → 열기 → 열기</b>로 한 번만 실행해 주세요.</li>
-            <li>첫 실행에서 저장 폴더를 지정합니다.</li>
-          </ul>
-
-          <h3>AI 기능을 쓰려면 (선택)</h3>
-          <ul class="list">
-            <li>AI 채팅과 플로우의 AI 노드는 <b>로컬 Ollama</b>가 필요합니다. Ollama를 설치한 뒤 앱의 <b>AI 모델 다운로드</b>에서 대화 모델을 받으세요.</li>
-            <li>지식베이스(RAG)를 쓰려면 임베딩 모델 <span class="mono">nomic-embed-text</span>도 함께 받습니다.</li>
-            <li>모델을 내려받을 때만 네트워크를 쓰고, 그 뒤 추론은 전부 내 컴퓨터에서 실행됩니다.</li>
-            <li>AI를 쓰지 않아도 메모·드로잉·시트·그래프·검색은 모두 그대로 동작합니다.</li>
-          </ul>
-
-          <h3>시스템 요구사항</h3>
-          <ul class="list">
-            <li>Windows 10 이상 (64비트) · macOS 11 이상</li>
-            <li>메모 저장용 디스크 공간은 메모 양만큼. AI 모델을 받는다면 모델 크기만큼 여유가 더 필요합니다.</li>
-          </ul>
-        </section>
-
-        <!-- ══ FAQ ══ -->
-        <section class="sec" id="faq">
-          <div class="sec-head">
-            <h2>자주 묻는 질문</h2>
-          </div>
-          <div class="faq">
-            <details open>
-              <summary>인터넷이 꼭 필요한가요?</summary>
-              <div class="ans"><p>아니요. 메모·드로잉·시트·검색·그래프는 모두 오프라인에서 동작합니다. 네트워크가 필요한 순간은 Ollama 모델을 내려받을 때뿐입니다.</p></div>
-            </details>
-            <details>
-              <summary>내가 쓴 글이 어디론가 전송되나요?</summary>
-              <div class="ans"><p>전송되지 않습니다. 계정도, 서버도, 사용 기록 수집도 없습니다. AI 추론까지 내 컴퓨터의 Ollama에서 실행되므로 메모가 외부 API로 나가지 않습니다.</p></div>
-            </details>
-            <details>
-              <summary>메모는 어떤 형식으로 저장되나요?</summary>
-              <div class="ans"><p>고른 폴더 안의 실제 파일입니다. 메모는 마크다운, 드로잉은 Excalidraw 장면, 시트는 시트 파일로 저장됩니다. 다른 편집기로 열어도 되고, 폴더째 복사하면 그게 곧 백업입니다.</p></div>
-            </details>
-            <details>
-              <summary>AI를 안 쓰면 반쪽짜리인가요?</summary>
-              <div class="ans"><p>아닙니다. Ollama를 설치하지 않으면 AI 채팅과 플로우의 AI 노드만 쓸 수 없고, 나머지 기능은 전부 그대로입니다.</p></div>
-            </details>
-            <details>
-              <summary>비밀번호 잠금은 파일을 암호화하나요?</summary>
-              <div class="ans"><p>아니요. 앱 안에서 내용을 감추고 접근을 막는 기능이며, 디스크에 있는 파일 자체를 암호화하지는 않습니다. 잠긴 메모는 검색 결과와 AI 지식베이스에서 제외됩니다.</p></div>
-            </details>
-            <details>
-              <summary>자동 업데이트가 되나요?</summary>
-              <div class="ans"><p>아직 없습니다. 새 버전이 나오면 이 페이지에서 설치 파일을 받아 다시 설치하면 됩니다. 메모는 워크스페이스 폴더에 있으므로 재설치해도 그대로입니다.</p></div>
-            </details>
-            <details>
-              <summary>백업과 복원은 어떻게 하나요?</summary>
-              <div class="ans"><p>설정 → 백업에서 메모·메타정보·템플릿·모델 프로필·플로우를 JSON 한 파일로 내보내고, 같은 화면에서 가져옵니다. 가져온 예약 플로우는 안전을 위해 꺼진 상태로 들어옵니다.</p></div>
-            </details>
-          </div>
-        </section>
-
-        <!-- ══ 닫는 다운로드 ══ -->
-        <section class="close-cta">
-          <h2>받아서 폴더 하나 정하는 것부터.</h2>
-          <p>첫 실행에서 저장 폴더만 정하면 바로 쓸 수 있습니다.</p>
-          <div class="dl">
-            <a class="dl-btn" href="https://github.com/SehunPyo/Aurora_web_download/releases/download/v7.0.2/Aurora-7.0.2-win.zip" download>
-              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-monitor"/></svg>
-              <span><b>Windows용 다운로드</b><small>Aurora-7.0.2-win.zip</small></span>
-            </a>
-            <a class="dl-btn" href="https://github.com/SehunPyo/Aurora_web_download/releases/download/v7.0.2/Aurora-7.0.2-mac.dmg.zip" download>
-              <svg aria-hidden="true" viewBox="0 0 24 24"><use href="#i-command"/></svg>
-              <span><b>macOS용 다운로드</b><small>Aurora-7.0.2-mac.dmg.zip</small></span>
-            </a>
-          </div>
-          <div class="foot">
-            <span class="mono">Aurora 7.0.2</span>
-            <span class="mono">com.memoge.app</span>
-            <span>현재 테마 · <b id="footTheme">라이트</b></span>
-          </div>
-        </section>
-
-      </article>
-    </main>
+<header class="head" id="head">
+  <div class="wrap head-in">
+    <a class="head-mark" href="#top"><i aria-hidden="true"></i>Studio&nbsp;Canvas</a>
+    <nav class="nav" aria-label="주요 메뉴">
+      <a href="#about" class="opt">스튜디오</a>
+      <a href="https://cafe.naver.com/haveinjob" class="opt" target="_blank" rel="noopener">커뮤니티</a>
+      <a href="#work" class="nav-cta">제품 보기</a>
+    </nav>
   </div>
-</div>
+</header>
 
-<script src="themes.js"></script>
-<script src="app.js"></script>
+<main id="top">
+
+  <!-- ═══ 1. 첫 화면 ═══════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <h1 class="sr-only">Studio Canvas</h1>
+
+    <canvas class="fluid" id="fluid" aria-hidden="true"></canvas>
+
+    <!-- WebGL 을 쓸 수 없을 때 대신 서는 글자 -->
+    <p class="fluid-fallback" id="fluidFallback" hidden>Studio<br>Canvas</p>
+
+    <p class="hero-tag">매일 사용하는 데스크톱 소프트웨어를 만듭니다.</p>
+
+    <a class="cue hero-cue" href="#work">
+      <span class="cue-ring">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5.5 12.5 12 19l6.5-6.5"/></svg>
+      </span>
+      <span class="cue-label">Scroll</span>
+    </a>
+  </section>
+
+  <!-- ═══ 2. 스튜디오 ══════════════════════════════════════════ -->
+  <section class="say" id="about" data-say>
+    <div class="say-sticky">
+      <div class="say-in">
+        <!-- 유체가 되는 문장. WebGL 이 없으면 아래 h2 가 그대로 보이고,
+             있으면 캔버스가 대신 서고 h2 는 읽어 주는 용도로만 남는다. -->
+        <canvas class="say-fluid" id="sayFluid" aria-hidden="true"></canvas>
+
+        <h2 class="say-text">
+          <span class="line" data-split>매일 사용하는 도구를 만듭니다.</span>
+          <span class="line" data-split>값은 매기지 않습니다.</span>
+        </h2>
+
+        <p class="say-note">
+          가장 좋은 프로그램은 가장 자주 사용하게 되는 프로그램이라고 생각합니다.
+          스튜디오 캔버스는 무료 프로그램도 가장 좋은 프로그램을 목표로 만듭니다.
+        </p>
+
+        <div class="vals">
+          <div style="--d:0ms"><b>Free</b><span>Price</span></div>
+          <div style="--d:110ms"><b>사용자 PC</b><span>Data</span></div>
+          <div style="--d:220ms"><b>Windows · macOS</b><span>Platform</span></div>
+        </div>
+      </div>
+
+      <a class="cue say-cue" href="#work">
+        <span class="cue-ring">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v15M5.5 12.5 12 19l6.5-6.5"/></svg>
+        </span>
+        <span class="cue-label">제품 보기</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ 3. 흐르는 띠 ═════════════════════════════════════════ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-in">
+      <span>Studio&nbsp;Canvas <em>—</em> Software for every day <em>—</em>&nbsp;</span>
+      <span>Studio&nbsp;Canvas <em>—</em> Software for every day <em>—</em>&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ═══ 4. 제품 ══════════════════════════════════════════════ -->
+  <section class="wrap work" id="work">
+    <div class="work-bar">
+      <h2 class="work-title">Products<em>16</em></h2>
+      <div class="filters" id="filters" role="group" aria-label="제품 거르기">
+        <button type="button" data-filter="all" aria-pressed="true">전체 16</button>
+        <button type="button" data-filter="live" aria-pressed="false">출시 1</button>
+        <button type="button" data-filter="soon" aria-pressed="false">준비 중 15</button>
+      </div>
+    </div>
+
+    <div class="grid" id="grid">
+
+      <a class="card" href="aurora.html" data-state="live">
+        <div class="card-vis">
+          <span class="card-badge">Download</span>
+          <img src="assets/products/aurora-card.jpg" alt="Aurora 앱 화면 — 마크다운 메모와 로컬 AI 채팅"
+               width="1400" height="1050">
+        </div>
+        <div class="card-foot">
+          <h3 class="card-name">Aurora</h3>
+          <div class="card-tags"><span>메모</span><span>AI</span><span>자동화</span></div>
+          <span class="card-meta">v7.0.2</span>
+        </div>
+      </a>
+
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+      <div class="card soon" data-state="soon"><div class="card-vis coming"><span>Coming Soon</span></div></div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══ 5. 닫는 말 ═══════════════════════════════════════════ -->
+<footer class="end" id="contact">
+  <div class="wrap">
+    <h2>다음 제품을<br>만들고 있습니다.</h2>
+    <p class="end-sub">스튜디오 캔버스와 함께하세요.</p>
+    <a class="end-link" href="https://cafe.naver.com/haveinjob" target="_blank" rel="noopener">https://cafe.naver.com/haveinjob</a>
+
+    <div class="foot">
+      <span>© <span id="year">2026</span> Studio Canvas</span>
+      <span class="foot-links">
+        <a href="#work">Products</a>
+        <a href="aurora.html">Aurora</a>
+        <a href="https://github.com/SehunPyo/Aurora_web_download/releases">Releases</a>
+      </span>
+      <span>Seoul, KR</span>
+    </div>
+  </div>
+</footer>
+
+<script src="fluid-text.js"></script>
+<script src="studio.js"></script>
 </body>
 </html>
