@@ -122,7 +122,7 @@ def page(product, key, plat):
     </dl>
 
     <a class="dl-go" href="%(url)s" rel="noopener">%(label)s용 내려받기</a>
-    <p class="dl-hint">버튼을 누르면 내려받기가 시작됩니다. 받은 뒤 압축을 풀어 설치하세요.</p>%(other)s
+    <p class="dl-hint">버튼을 누르면 내려받기가 시작됩니다. %(hint)s</p>%(other)s
   </div>
 </main>
 
@@ -144,6 +144,7 @@ def page(product, key, plat):
         'productPage': esc(product.get('productPage', '/')),
         'spec': spec,
         'url': esc(plat['downloadUrl']),
+        'hint': esc(plat.get('hint', '받은 뒤 압축을 풀어 설치하세요.')),
         'other': other_html,
     }
 
