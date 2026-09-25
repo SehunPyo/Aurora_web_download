@@ -34,6 +34,27 @@ ADSENSE = (
 
 PLATFORM_ORDER = ['windows', 'macos', 'linux']
 
+# products.json 에 releaseRepo 와 platform 별 assetExt 가 있으면 넣는 스크립트.
+# 최신 릴리즈에서 그 확장자로 끝나는 파일을 찾아 버튼 주소와 표의 값을 바꾼다.
+# API 를 못 부르면(한도 초과·오프라인) products.json 의 값이 그대로 남는다.
+RELEASE_JS = """
+<script>
+fetch(%(api)s)
+  .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+  .then((rel) => {
+    const a = rel.assets.find((x) => x.name.endsWith(%(ext)s));
+    if (!a) return;
+    const set = (k, v) => document.querySelectorAll('[data-rel="' + k + '"]').forEach((el) => { el.textContent = v; });
+    set('version', rel.tag_name.replace(/^v/, ''));
+    set('size', Math.round(a.size / 1048576) + ' MB');
+    set('date', (rel.published_at || '').slice(0, 10));
+    set('name', a.name);
+    document.getElementById('dlGo').href = a.browser_download_url;
+  })
+  .catch(() => {});
+</script>
+"""
+
 
 def esc(v):
     return html.escape(str(v), quote=True)
@@ -57,14 +78,15 @@ def page(product, key, plat):
             '\n      <p class="dl-other"><span>다른 운영체제</span>%s</p>' % links
         )
 
+    # data-rel 이 붙은 칸은 페이지를 열 때 GitHub 최신 릴리즈 값으로 바뀐다.
     rows = [
         ('운영체제', esc(plat.get('requirement', label)), ''),
-        ('버전', esc(product['version']), ''),
-        ('파일 크기', esc(plat['fileSize']), ''),
-        ('업데이트', esc(product['updatedAt']), ''),
+        ('버전', esc(product['version']), ' data-rel="version"'),
+        ('파일 크기', esc(plat['fileSize']), ' data-rel="size"'),
+        ('업데이트', esc(product['updatedAt']), ' data-rel="date"'),
     ]
     if plat.get('fileName'):
-        rows.append(('파일 이름', esc(plat['fileName']), ' class="mono"'))
+        rows.append(('파일 이름', esc(plat['fileName']), ' class="mono" data-rel="name"'))
 
     spec = '\n'.join(
         '          <div><dt>%s</dt><dd%s>%s</dd></div>' % (dt, cls, dd)
@@ -74,6 +96,13 @@ def page(product, key, plat):
     title = '%s %s 다운로드 — Studio Canvas' % (name, label)
     desc = '%s %s용 설치 파일을 내려받습니다. 버전 %s · %s' % (
         name, label, product['version'], plat['fileSize'])
+
+    release = ''
+    if product.get('releaseRepo') and plat.get('assetExt'):
+        release = RELEASE_JS % {
+            'api': json.dumps('https://api.github.com/repos/%s/releases/latest' % product['releaseRepo']),
+            'ext': json.dumps(plat['assetExt']),
+        }
 
     return """<!doctype html>
 <!--
@@ -121,7 +150,7 @@ def page(product, key, plat):
 %(spec)s
     </dl>
 
-    <a class="dl-go" href="%(url)s" rel="noopener">%(label)s용 내려받기</a>
+    <a class="dl-go" id="dlGo" href="%(url)s" rel="noopener">%(label)s용 내려받기</a>
     <p class="dl-hint">버튼을 누르면 내려받기가 시작됩니다. %(hint)s</p>%(other)s
   </div>
 </main>
@@ -129,7 +158,7 @@ def page(product, key, plat):
 <footer class="dl-foot">
   <a href="/">Studio Canvas</a> · <a href="%(productPage)s">%(name)s</a>
 </footer>
-
+%(release)s
 </body>
 </html>
 """ % {
@@ -146,6 +175,7 @@ def page(product, key, plat):
         'url': esc(plat['downloadUrl']),
         'hint': esc(plat.get('hint', '받은 뒤 압축을 풀어 설치하세요.')),
         'other': other_html,
+        'release': release,
     }
 
 

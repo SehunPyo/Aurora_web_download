@@ -43,13 +43,13 @@
 
     <dl class="dl-spec">
           <div><dt>운영체제</dt><dd>macOS 11 이상 · Apple Silicon</dd></div>
-          <div><dt>버전</dt><dd>7.1.2</dd></div>
-          <div><dt>파일 크기</dt><dd>149 MB</dd></div>
-          <div><dt>업데이트</dt><dd>2026-09-23</dd></div>
-          <div><dt>파일 이름</dt><dd class="mono">Aurora-7.1.2-mac-arm64.dmg</dd></div>
+          <div><dt>버전</dt><dd data-rel="version">7.1.2</dd></div>
+          <div><dt>파일 크기</dt><dd data-rel="size">149 MB</dd></div>
+          <div><dt>업데이트</dt><dd data-rel="date">2026-09-23</dd></div>
+          <div><dt>파일 이름</dt><dd class="mono" data-rel="name">Aurora-7.1.2-mac-arm64.dmg</dd></div>
     </dl>
 
-    <a class="dl-go" href="https://github.com/SehunPyo/Aurora_web_download/releases/download/v7.1.2/Aurora-7.1.2-mac-arm64.dmg" rel="noopener">macOS용 내려받기</a>
+    <a class="dl-go" id="dlGo" href="https://github.com/SehunPyo/Aurora_web_download/releases/download/v7.1.2/Aurora-7.1.2-mac-arm64.dmg" rel="noopener">macOS용 내려받기</a>
     <p class="dl-hint">버튼을 누르면 내려받기가 시작됩니다. 받은 .dmg 파일을 열어 설치하세요.</p>
       <p class="dl-other"><span>다른 운영체제</span><a href="/download/aurora/windows">Windows</a></p>
   </div>
@@ -58,6 +58,22 @@
 <footer class="dl-foot">
   <a href="/">Studio Canvas</a> · <a href="/aurora.html">Aurora</a>
 </footer>
+
+<script>
+fetch("https://api.github.com/repos/SehunPyo/Aurora_web_download/releases/latest")
+  .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+  .then((rel) => {
+    const a = rel.assets.find((x) => x.name.endsWith(".dmg"));
+    if (!a) return;
+    const set = (k, v) => document.querySelectorAll('[data-rel="' + k + '"]').forEach((el) => { el.textContent = v; });
+    set('version', rel.tag_name.replace(/^v/, ''));
+    set('size', Math.round(a.size / 1048576) + ' MB');
+    set('date', (rel.published_at || '').slice(0, 10));
+    set('name', a.name);
+    document.getElementById('dlGo').href = a.browser_download_url;
+  })
+  .catch(() => {});
+</script>
 
 </body>
 </html>
